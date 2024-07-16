@@ -7,14 +7,13 @@ FROM python:3.10-slim-bullseye
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
-#libtcmalloc-minimal4t64
 RUN --mount=target=/var/lib/apt/lists,type=cache \
     --mount=target=/var/cache/apt,type=cache \
-    apt update \
-    && apt install -y git libglib2.0-0 libgl1-mesa-glx sudo
+ apt update \
+ && apt install -y git libglib2.0-0 libgl1-mesa-glx sudo libtcmalloc-minimal4
 
 RUN install -v -m 0777 -o nobody -g nogroup -d /app \
-    && usermod --groups sudo --home /app nobody
+ && usermod --home /app nobody
 
 COPY nobody /etc/sudoers.d/nobody
 
@@ -22,6 +21,9 @@ USER nobody:nogroup
 WORKDIR /app
 
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /app \
+ && git clone https://github.com/Stability-AI/stablediffusion.git /app/repositories/stable-diffusion-stability-ai \
+ && git clone https://github.com/crowsonkb/k-diffusion.git /app/repositories/k-diffusion \
+ && git clone https://github.com/salesforce/BLIP.git /app/repositories/BLIP \
  && mkdir /app/.cache
 
 # RUN mkdir stable-diffusion-webui
@@ -31,7 +33,7 @@ RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /app \
 
 # EXPOSE 7860/tcp
 
-CMD ["/app/webui.sh","--api","--listen"]
-# CMD ["python","-u","launch.py","--api"]
+CMD ["/app/webui.sh","--api","--listen","--xformers"]
+# CMD ["python","-u","launch.py","--api","--xformers"]
 
 # docker run --gpus all -p 7860:7860 --tty --interactive --name a1 gchr.io/gsfjohnson/automatic1111-docker:main
