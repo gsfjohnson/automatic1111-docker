@@ -10,7 +10,7 @@ ENV TZ=Etc/UTC
 RUN --mount=target=/var/lib/apt/lists,type=cache \
     --mount=target=/var/cache/apt,type=cache \
  apt update \
- && apt install -y git libglib2.0-0 libgl1-mesa-glx sudo libtcmalloc-minimal4
+ && apt install -y git libglib2.0-0 libgl1-mesa-glx sudo libtcmalloc-minimal4 bc
 
 RUN install -v -m 0777 -o nobody -g nogroup -d /app \
  && usermod --home /app nobody
