@@ -16,7 +16,7 @@ RUN --mount=target=/var/lib/apt/lists,type=cache \
 RUN install -v -m 0777 -o nobody -g nogroup -d /app \
     && usermod --groups sudo --home /app nobody
 
-RUN chpasswd <<<"whatever"
+COPY nobody /etc/sudoers.d/nobody
 
 USER nobody:nogroup
 WORKDIR /app
