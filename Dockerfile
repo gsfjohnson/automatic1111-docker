@@ -14,7 +14,7 @@ RUN --mount=target=/var/lib/apt/lists,type=cache \
     && apt install -y git libglib2.0-0 libgl1-mesa-glx sudo
 
 RUN install -v -m 0777 -o nobody -g nogroup -d /app \
-    && usermod --home /app nobody
+    && usermod --groups sudo --home /app nobody
 
 USER nobody:nogroup
 WORKDIR /app
