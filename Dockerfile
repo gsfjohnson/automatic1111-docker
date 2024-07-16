@@ -4,13 +4,14 @@ FROM python:3.10-slim-bullseye
 
 #ENV XDG_CACHE_HOME=/var/cache
 #ENV PIP_CACHE_DIR=/var/cache/pip
+ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
 #libtcmalloc-minimal4t64
 RUN --mount=target=/var/lib/apt/lists,type=cache \
     --mount=target=/var/cache/apt,type=cache \
     apt update \
-    && DEBIAN_FRONTEND=noninteractive apt install -y git libglib2.0-0 libgl1-mesa-glx
+    && apt install -y git libglib2.0-0 libgl1-mesa-glx sudo
 
 RUN install -v -m 0777 -o nobody -g nogroup -d /app \
     && usermod --home /app nobody
