@@ -10,12 +10,13 @@ ENV TZ=Etc/UTC
 RUN --mount=target=/var/lib/apt/lists,type=cache \
     --mount=target=/var/cache/apt,type=cache \
  apt update \
- && apt install -y git libglib2.0-0 libgl1-mesa-glx sudo libtcmalloc-minimal4 bc
+ && apt install -y git libglib2.0-0 libgl1-mesa-glx libtcmalloc-minimal4 bc sudo
 
 RUN install -v -m 0777 -o nobody -g nogroup -d /app \
- && usermod --home /app nobody
+ && usermod --home /app nobody \
+ && mkdir -p /app/.cache/pip
 
-COPY nobody /etc/sudoers.d/nobody
+COPY nobody.sudoers /etc/sudoers.d/nobody
 
 USER nobody:nogroup
 WORKDIR /app
@@ -23,8 +24,7 @@ WORKDIR /app
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git /app \
  && git clone https://github.com/Stability-AI/stablediffusion.git /app/repositories/stable-diffusion-stability-ai \
  && git clone https://github.com/crowsonkb/k-diffusion.git /app/repositories/k-diffusion \
- && git clone https://github.com/salesforce/BLIP.git /app/repositories/BLIP \
- && mkdir /app/.cache
+ && git clone https://github.com/salesforce/BLIP.git /app/repositories/BLIP
 
 # RUN mkdir stable-diffusion-webui
 # COPY . stable-diffusion-webui/
